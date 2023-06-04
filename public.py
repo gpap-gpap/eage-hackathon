@@ -39,7 +39,7 @@ st.write(
 n_recoms = st.radio("How many recommendations?", [5, 10, 20])
 col1, _, col2 = st.columns([60, 5, 60])
 with col1:
-    st.header("Papers to recommend from")
+    st.header("Which papers do you like?")
     new_df = st.data_editor(
         df[["Title", "Selected"]],
         column_config={
