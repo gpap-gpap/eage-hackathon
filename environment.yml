@@ -3,11 +3,11 @@ channels:
   - defaults
 dependencies:
   - python
-  - streamlit
   - numpy
   - requests
   - matplotlib
   - pandas
   - pip
+  - streamlit
   - pip:
     - bs4
