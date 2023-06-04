@@ -53,7 +53,7 @@ st.write(
 n_recoms = st.radio("How many recommendations?", [5, 10, 20])
 col1, _, col2 = st.columns([60, 5, 60])
 with col1:
-    st.header("Which papers do you like?")
+    st.header("Which EAGE '23 papers do you like?")
     new_df = st.data_editor(
         df[["Title", "Selected"]],
         column_config={
@@ -109,7 +109,7 @@ with col2:
     # st.write(recommendations["Title"].iloc[0])
     # st.write(recommendations["Title"])
     # st.write(bf.recommendations(n=n_recoms, title=recommendations["Title"].iloc[0]))
-    st.header("Relevant google Scholar search")
+    st.header("...as well as these classics!")
     if st.session_state.search_indices == []:
         st.write("First, please select some papers to recommend from")
     else:
