@@ -264,4 +264,4 @@ def return_first_page(*, query: str):
 
     # use sleep to avoid status code 429
     result = [final["Paper Title"].iloc[0], final["Url of paper"].iloc[0]]
-    return final
+    return result
