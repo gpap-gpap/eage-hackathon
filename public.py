@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import basic_functions as bf
 
-import query_scholar as qs
+# import query_scholar as qs
 
 st.set_page_config(layout="wide")
 st.session_state["recommendations"] = False
