@@ -2,7 +2,7 @@ name: eage-hackathon-streamlit
 channels:
   - defaults
 dependencies:
-  - python=3.10
+  - python
   - streamlit
   - numpy
   - requests
