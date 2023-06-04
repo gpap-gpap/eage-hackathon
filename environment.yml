@@ -2,12 +2,15 @@ name: eage-hackathon-streamlit
 channels:
   - defaults
 dependencies:
-  - python
+  - python=3.10
   - numpy
   - requests
   - matplotlib
   - pandas
   - pip
   - streamlit
+  - openai
   - pip:
     - bs4
+    - langchain
+    - faiss-cpu

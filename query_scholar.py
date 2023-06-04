@@ -130,7 +130,7 @@ def add_in_paper_repo(
 
 def return_first_page(*, query: str):
     # final
-    new_query = query.replace(" ", "_")
+    new_query = query.replace(" ", "+")
     url = f"https://scholar.google.com/scholar?start=0&q=EAGE+conference+and+exhibition+{new_query}&as_sdt=0,5"
 
     paper_repos_dict = {
