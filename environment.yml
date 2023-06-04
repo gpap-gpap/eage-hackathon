@@ -11,3 +11,4 @@ dependencies:
   - pip
   - pip:
     - bs4
+    - openpyxl
