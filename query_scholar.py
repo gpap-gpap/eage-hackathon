@@ -72,7 +72,17 @@ def word_frequency(contents: list):
     tokenized_words = [word_tokenize(t) for t in test_text]
     flattened = [item for sublist in tokenized_words for item in sublist]
     # filtered_text = [w for w in word if w not in stop_words] for word in tokenized_words]
-    my_words = {"paper", "results", "used", "method", "application", "figure", "fig"}
+    my_words = {
+        "paper",
+        "results",
+        "used",
+        "method",
+        "application",
+        "figure",
+        "fig",
+        "et",
+        "al",
+    }
     filtered_text_2 = [
         w for w in flattened if w not in stop_words and w not in my_words
     ]
