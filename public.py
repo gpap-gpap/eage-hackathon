@@ -68,7 +68,7 @@ with col1:
         )
 
 with col2:
-    st.header("Our recommendations")
+    st.header("Also check out...")
     # for i in indices:
     #     dictionary_out = bf.similarity_return_v3(id=i, n=n_recoms)
     #     st.write("this is what I am testing", f"{dictionary_out[0]['Title']}")
