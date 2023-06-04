@@ -72,11 +72,17 @@ with col2:
         st.write("Please select some papers to recommend from")
     else:
         id_list = bf.average_vectors(ids=list(st.session_state.current_indices))
+        id = st.session_state.current_indices[0]
+        # st.write("indices", bf.return_vector(id=id))
         # st.write(id_list)
-        results = bf.db_search(ids=list(st.session_state.current_indices), n=n_recoms)
+        n = n_recoms + len(st.session_state.current_indices)
+        results = bf.db_search(ids=list(st.session_state.current_indices), n=n)[
+            len(st.session_state.current_indices) :
+        ]
         parsed = bf.parse_metadata(metadata=results)
         testdf = df.loc[df["File name"].isin(parsed)]
         st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
+
     # st.write(parsed)
     # st.dataframe(recommendations)
     # st.write(recommendations["Title"].iloc[0])

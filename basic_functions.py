@@ -24,8 +24,13 @@ def load_dict():
     return result
 
 
+def return_vector_old(*, id: int):
+    result = db.index.reconstruct_n(n0=id, ni=1)
+    return result
+
+
 def return_vector(*, id: int):
-    result = db.index.reconstruct_n(n0=0, ni=1)[0]
+    result = db.index.reconstruct(key=int(id))
     return result
 
 
