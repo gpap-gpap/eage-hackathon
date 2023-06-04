@@ -7,7 +7,7 @@ dependencies:
   - numpy
   - requests
   - matplotlib
-  - pandas
+  - pandas = 
   - pip
   - pip:
     - bs4

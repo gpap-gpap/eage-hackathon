@@ -10,7 +10,7 @@ st.session_state["recommendations"] = False
 
 @st.cache_data
 def load_data():
-    return pd.read_excel(r"./data/Annual_2023_Hackathon_metadata.xlsx")
+    return pd.read_csv(r"./data/Annual_2023_Hackathon_metadata.csv")
 
 
 df = load_data()
