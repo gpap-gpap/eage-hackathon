@@ -119,9 +119,9 @@ with col2:
         wf = qs.word_frequency(cont).most_common(6)
         query, readable = qs.create_query(cont)
         st.write(readable)
-        if st.button("Search"):
-            # new_data = qs.return_first_page(query=query)
-            # st.dataframe(new_data)
+        # if st.button("Search"):
+        # new_data = qs.return_first_page(query=query)
+        # st.dataframe(new_data)
 # string = ""
 # for i in indices:.replace(" ", "+")
 # chunks = dictionary_out[0]["Title"]
@@ -131,4 +131,3 @@ with col2:
 # st.dataframe(new_data)
 
 # def app():
-#
