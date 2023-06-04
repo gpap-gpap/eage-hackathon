@@ -4,6 +4,93 @@ import pandas as pd
 import re
 from time import sleep
 import pandas as pd
+import os
+import nltk
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain import schema as langchain_schema
+import string
+
+nltk.download("stopwords")
+nltk.download("punkt")
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+from nltk.tokenize import sent_tokenize
+
+
+stop_words = set(stopwords.words("english"))
+
+os.environ["OPENAI_API_KEY"] = "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"
+embeddings = OpenAIEmbeddings()
+db = FAISS.load_local(
+    "./vectordb/eage_annual_2023_chunks_basic_test/",
+    embeddings,
+)
+
+pdf_to_id_chunks = {
+    value.metadata["source"].rsplit("\\", 1)[-1]: index
+    for index, value in enumerate(db.docstore._dict.values())
+}
+
+
+def get_id_from_pdf_chunks(pdf_number):
+    if pdf_number not in pdf_to_id_chunks:
+        print("pdf not found")
+        result = None
+    result = pdf_to_id_chunks.get(pdf_number)
+    return result
+
+
+def return_vector(*, id: int):
+    result = db.index.reconstruct(key=int(id))
+    return result
+
+
+def average_vectors(*, ids: list):
+    vectors = [return_vector(id=id) for id in ids]
+    result = [sum(i) / len(i) for i in zip(*vectors)]
+    return result
+
+
+def db_search(*, ids: list, n: int):
+    result = db.similarity_search_by_vector(average_vectors(ids=ids), k=n)
+    return result
+
+
+def parse_db_result(*, results: langchain_schema.Document):
+    content = [result.page_content for result in results]
+    metadata = [result.metadata for result in results]
+    return content, metadata
+
+
+def word_frequency(contents: list):
+    test_text = [
+        t.translate(str.maketrans("", "", string.punctuation)) for t in contents
+    ]
+    test_text = [t.lower() for t in test_text]
+    tokenized_words = [word_tokenize(t) for t in test_text]
+    flattened = [item for sublist in tokenized_words for item in sublist]
+    # filtered_text = [w for w in word if w not in stop_words] for word in tokenized_words]
+    my_words = {"paper", "results", "used", "method", "application", "figure", "fig"}
+    filtered_text_2 = [
+        w for w in flattened if w not in stop_words and w not in my_words
+    ]
+    # filtered_text_3 = "".join(
+    #     [i for word in filtered_text_2 for i in word if not i.isdigit()]
+    # )
+    fdist = FreqDist(filtered_text_2)
+    return fdist
+
+
+def create_query(content):
+    str = ""
+    readable = ""
+    for word, freq in word_frequency(content).most_common(6):
+        str += word + "+"
+        readable += word + " + "
+    return str[:-1], readable[:-3]
+
 
 headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"

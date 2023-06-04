@@ -2,13 +2,15 @@ import streamlit as st
 import pandas as pd
 import basic_functions as bf
 
-# import query_scholar as qs
+import query_scholar as qs
 
 st.set_page_config(layout="wide")
 if "recommendations" not in st.session_state:
     st.session_state.recommendations = False
 if "current_indices" not in st.session_state:
     st.session_state.current_indices = []
+if "search_indices" not in st.session_state:
+    st.session_state.search_indices = []
 
 
 def reset():
@@ -59,6 +61,11 @@ with col1:
             .apply(bf.get_id_from_pdf)
             .values
         )
+        st.session_state.search_indices = (
+            st.session_state.recommendations["File name"]
+            .apply(qs.get_id_from_pdf_chunks)
+            .values
+        )
 
 with col2:
     st.header("Our recommendations")
@@ -69,7 +76,7 @@ with col2:
     # st.write(indices)
     # st.write([ind for ind in indices])
     if st.session_state.current_indices == []:
-        st.write("Please select some papers to recommend from")
+        st.write("First, please select some papers to recommend from")
     else:
         id_list = bf.average_vectors(ids=list(st.session_state.current_indices))
         id = st.session_state.current_indices[0]
@@ -89,6 +96,15 @@ with col2:
     # st.write(recommendations["Title"])
     # st.write(bf.recommendations(n=n_recoms, title=recommendations["Title"].iloc[0]))
     st.header("Relevant google Scholar search")
+    if st.session_state.search_indices == []:
+        st.write("First, please select some papers to recommend from")
+    else:
+        cont, _ = qs.parse_db_result(
+            results=qs.db_search(ids=st.session_state.current_indices, n=15)
+        )
+        wf = qs.word_frequency(cont).most_common(6)
+        query, readable = qs.create_query(cont)
+        st.write(readable)
 # string = ""
 # for i in indices:.replace(" ", "+")
 # chunks = dictionary_out[0]["Title"]
