@@ -5,7 +5,15 @@ import basic_functions as bf
 # import query_scholar as qs
 
 st.set_page_config(layout="wide")
-st.session_state["recommendations"] = False
+if "recommendations" not in st.session_state:
+    st.session_state.recommendations = False
+if "current_indices" not in st.session_state:
+    st.session_state.current_indices = []
+
+
+def reset():
+    st.session_state.recommendations = False
+    st.session_state.current_indices = []
 
 
 @st.cache_data
@@ -15,7 +23,7 @@ def load_data():
 
 df = load_data()
 df["Selected"] = False
-recommendations = df[df["Selected"] == True]
+st.session_state.recommendations = df[df["Selected"] == True]
 
 # @st.cache_data
 ind_to_pdf = bf.load_dict()
@@ -43,10 +51,14 @@ with col1:
         hide_index=True,
     )
     if st.button("Reset recommendations"):
-        recommendations = new_df["Selected"] == False
+        st.session_state.recommendations = df[new_df["Selected"] == False]
     if st.button("Generate recommendations"):
-        recommendations = df[new_df["Selected"] == True]
-        indices = recommendations["File name"].apply(bf.get_id_from_pdf).values
+        st.session_state.recommendations = df[new_df["Selected"] == True]
+        st.session_state.current_indices = (
+            st.session_state.recommendations["File name"]
+            .apply(bf.get_id_from_pdf)
+            .values
+        )
 
 with col2:
     st.header("Our recommendations")
@@ -56,17 +68,21 @@ with col2:
     # st.write(dictionary_out)
     # st.write(indices)
     # st.write([ind for ind in indices])
-    id_list = bf.average_vectors(ids=list(indices))
-    # st.write(id_list)
-    results = bf.db_search(ids=list(indices), n=n_recoms)
-    parsed = bf.parse_metadata(metadata=results)
-    testdf = df.loc[df["File name"].isin(parsed)]
-    st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
+    if st.session_state.current_indices == []:
+        st.write("Please select some papers to recommend from")
+    else:
+        id_list = bf.average_vectors(ids=list(st.session_state.current_indices))
+        # st.write(id_list)
+        results = bf.db_search(ids=list(st.session_state.current_indices), n=n_recoms)
+        parsed = bf.parse_metadata(metadata=results)
+        testdf = df.loc[df["File name"].isin(parsed)]
+        st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
     # st.write(parsed)
     # st.dataframe(recommendations)
     # st.write(recommendations["Title"].iloc[0])
     # st.write(recommendations["Title"])
     # st.write(bf.recommendations(n=n_recoms, title=recommendations["Title"].iloc[0]))
+    st.header("Relevant google Scholar search")
 # string = ""
 # for i in indices:.replace(" ", "+")
 # chunks = dictionary_out[0]["Title"]
