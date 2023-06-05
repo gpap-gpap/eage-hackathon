@@ -122,7 +122,7 @@ prev_qry = "avo"
 user_query = st.text_input(label="")
 if st.button("Search in EAGE '23 papers") or (prev_qry != user_query):
     prev_qry = user_query
-    results_fromsearch = bf.search_by_query(user_query, n_recoms)
+    results_fromsearch = bf.search_by_query(user_query, 5)
     parsed_fromsearch = bf.parse_metadata(metadata=results_fromsearch)
     returned_df = df.loc[df["File name"].isin(parsed_fromsearch)]
 
