@@ -58,6 +58,7 @@ st.write(
 )
 
 n_recoms = st.radio("How many recommendations?", [5, 10, 20])
+
 col1, _, col2 = st.columns([60, 5, 60])
 with col1:
     st.header("Which EAGE '23 papers do you like?")
@@ -75,6 +76,7 @@ with col1:
     )
 
     if st.button("Generate recommendations"):
+        # let_me_see = test_again_df[test_test_again_df["Selected"] == True].obj
         st.session_state.recommendations = df[new_df["Selected"] == True]
         st.session_state.current_indices = (
             st.session_state.recommendations["File name"]
