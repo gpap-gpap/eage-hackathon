@@ -4,6 +4,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain import schema as langchain_schema
 import openai
+import streamlit as st
 
 pd.options.display.max_colwidth = 20
 df = pd.read_excel(r"./data/Annual_2023_Hackathon_metadata.xlsx")
