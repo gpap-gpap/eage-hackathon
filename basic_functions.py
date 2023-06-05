@@ -3,10 +3,12 @@ import os
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain import schema as langchain_schema
+import openai
 
 pd.options.display.max_colwidth = 20
 df = pd.read_excel(r"./data/Annual_2023_Hackathon_metadata.xlsx")
 api_key = os.environ["OPENAI_API_KEY"]
+#
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
     "./vectordb/eage_annual_2023_summaries_basic_test/",
@@ -72,3 +74,13 @@ def get_id_list_from_pdf_list(pdf_list):
         if get_id_from_pdf(pdf_number) is not None
     ]
     return result
+
+
+def search_by_query(query, n: int):
+    openai.api_key = "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"
+    # openai.api_key = os.environ["PAID_OPEN_AI_KEY"]
+    response = openai.Embedding.create(input=query, model="text-embedding-ada-002")
+    embedding = response["data"][0]["embedding"]
+    results = db.similarity_search_by_vector(embedding, k=n)
+
+    return results

@@ -10,6 +10,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain import schema as langchain_schema
 import string
+import openai
 
 nltk.download("stopwords")
 nltk.download("punkt")
@@ -23,6 +24,7 @@ stop_words = set(stopwords.words("english"))
 years = {str(i) for i in range(1996, 2022)}
 
 api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = "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"
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
     "./vectordb/eage_annual_2023_chunks_basic_test/",

@@ -3,7 +3,9 @@ import pandas as pd
 import basic_functions as bf
 from streamlit.components.v1 import html
 import query_scholar as qs
+from PIL import Image
 
+image = Image.open("eagle_icon.png")
 
 st.set_page_config(layout="wide")
 
@@ -43,8 +45,11 @@ st.session_state.recommendations = df[df["Selected"] == True]
 
 # @st.cache_data
 ind_to_pdf = bf.load_dict()
-
-st.title("EAGE 2023 abstract recommendation engine")
+col1, _, col2 = st.columns([100, 5, 20])
+with col1:
+    st.title("EAGE 2023 abstract recommendation engine")
+with col2:
+    st.image("eagle_icon.png", width=200)
 st.write(
     "<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>",
     unsafe_allow_html=True,
@@ -124,10 +129,32 @@ with col2:
         url = qs.return_first_page(query=query)
         if st.button("...as well as these past EAGE classic papers!"):
             open_page(url)
-        # if st.button("Search"):
-        #     url = qs.return_first_page(query=query)
-        #     st.write(f"check out this [link]({url})")
-        # st.dataframe(new_data)
+
+st.header("Search by query")
+# query = st.text_input("Please write your search query")
+# if st.button("Search in EAGE '23 papers"):
+#     results = bf.search_by_query(query, n_recoms)
+#     parsed = bf.parse_metadata(metadata=results)
+#     testdf = df.loc[df["File name"].isin(parsed)]
+#     st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
+prev_qry = "avo"
+user_query = st.text_input(label="")
+if st.button("Search in EAGE '23 papers") or (prev_qry != user_query):
+    prev_qry = user_query
+    results_fromsearch = bf.search_by_query(user_query, n_recoms)
+    parsed_fromsearch = bf.parse_metadata(metadata=results_fromsearch)
+    returned_df = df.loc[df["File name"].isin(parsed_fromsearch)]
+    # st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
+    for index, row in returned_df.iterrows():
+        with st.expander(row["Title"]):
+            text = st.markdown(f"_{row['Summary']}_")
+    # prev_qry = user_query
+    # st.write(user_query)
+    # Display search results for user_query
+    # if st.button("Search"):
+    #     url = qs.return_first_page(query=query)
+    #     st.write(f"check out this [link]({url})")
+    # st.dataframe(new_data)
 # string = ""
 # for i in indices:.replace(" ", "+")
 # chunks = dictionary_out[0]["Title"]
