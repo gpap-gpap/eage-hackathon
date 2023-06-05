@@ -8,6 +8,7 @@ from PIL import Image
 
 image = Image.open("eagle_transparent.png")
 
+
 st.set_page_config(layout="wide")
 
 
@@ -44,13 +45,13 @@ df = load_data()
 df["Selected"] = False
 st.session_state.recommendations = df[df["Selected"] == True]
 
-# @st.cache_data
+
 ind_to_pdf = bf.load_dict()
 col1, _, col2 = st.columns([100, 5, 20])
 with col1:
     st.title("EAGE 2023 abstract recommendation engine")
 with col2:
-    st.image("eagle_icon.png", width=200)
+    st.image(image, width=200)
 st.write(
     "<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>",
     unsafe_allow_html=True,
@@ -72,8 +73,7 @@ with col1:
         disabled=["widgets"],
         hide_index=True,
     )
-    # if st.button("Reset recommendations"):
-    #     st.session_state.recommendations = df[new_df["Selected"] == False]
+
     if st.button("Generate recommendations"):
         st.session_state.recommendations = df[new_df["Selected"] == True]
         st.session_state.current_indices = (
