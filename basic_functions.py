@@ -6,7 +6,7 @@ from langchain import schema as langchain_schema
 
 pd.options.display.max_colwidth = 20
 df = pd.read_excel(r"./data/Annual_2023_Hackathon_metadata.xlsx")
-os.environ["OPENAI_API_KEY"] = "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"
+api_key = os.environ["OPENAI_API_KEY"]
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
     "./vectordb/eage_annual_2023_summaries_basic_test/",

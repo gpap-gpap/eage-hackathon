@@ -20,8 +20,9 @@ from nltk.tokenize import sent_tokenize
 
 
 stop_words = set(stopwords.words("english"))
+years = {str(i) for i in range(1996, 2022)}
 
-os.environ["OPENAI_API_KEY"] = "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"
+api_key = os.environ["OPENAI_API_KEY"]
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
     "./vectordb/eage_annual_2023_chunks_basic_test/",
@@ -86,9 +87,12 @@ def word_frequency(contents: list):
         "conference",
         "exhibition",
         "eage",
+        "journal",
     }
     filtered_text_2 = [
-        w for w in flattened if w not in stop_words and w not in my_words
+        w
+        for w in flattened
+        if w not in stop_words and w not in my_words and w not in years
     ]
     # filtered_text_3 = "".join(
     #     [i for word in filtered_text_2 for i in word if not i.isdigit()]

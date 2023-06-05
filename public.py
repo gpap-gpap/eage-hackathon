@@ -102,7 +102,9 @@ with col2:
         ]
         parsed = bf.parse_metadata(metadata=results)
         testdf = df.loc[df["File name"].isin(parsed)]
-        st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
+        for index, row in testdf.iterrows():
+            with st.expander(row["Title"]):
+                text = st.markdown(f"_{row['Summary']}_")
 
         # st.write(parsed)
         # st.dataframe(recommendations)
