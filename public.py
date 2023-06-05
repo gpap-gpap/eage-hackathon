@@ -147,7 +147,7 @@ if st.button("Search in EAGE '23 papers") or (prev_qry != user_query):
     # st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
     for index, row in returned_df.iterrows():
         with st.expander(row["Title"]):
-            text = st.markdown(f"_{row['Summary']}_")
+            text = st.markdown(f"_ {row['Summary']} _")
     # prev_qry = user_query
     # st.write(user_query)
     # Display search results for user_query
