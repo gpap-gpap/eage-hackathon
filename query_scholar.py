@@ -82,6 +82,10 @@ def word_frequency(contents: list):
         "fig",
         "et",
         "al",
+        "annual",
+        "conference",
+        "exhibition",
+        "eage",
     }
     filtered_text_2 = [
         w for w in flattened if w not in stop_words and w not in my_words
@@ -89,14 +93,15 @@ def word_frequency(contents: list):
     # filtered_text_3 = "".join(
     #     [i for word in filtered_text_2 for i in word if not i.isdigit()]
     # )
-    fdist = FreqDist(filtered_text_2)
+    filtered_text_3 = [word for word in filtered_text_2 if len(word) > 1]
+    fdist = FreqDist(filtered_text_3)
     return fdist
 
 
 def create_query(content):
     str = ""
     readable = ""
-    for word, freq in word_frequency(content).most_common(6):
+    for word, freq in word_frequency(content).most_common(5):
         str += word + "+"
         readable += word + " + "
     return str[:-1], readable[:-3]
@@ -110,7 +115,7 @@ headers = {
 def get_paperinfo(paper_url):
     # download the page
     response = requests.get(paper_url, headers=headers)
-
+    print(response.status_code)
     # check successful response
     if response.status_code != 200:
         print("Status code:", response.status_code)
@@ -141,10 +146,10 @@ def get_author_year_publi_info(authors_tag):
 def get_tags(doc):
     paper_tag = doc.select("[data-lid]")
     cite_tag = doc.select("[title=Cite] + a")
-    link_tag = doc.find_all("h3", {"class": "gs_rt"})
+    # link_tag = doc.find_all("h3", {"class": "gs_rt"})
     author_tag = doc.find_all("div", {"class": "gs_a"})
     text_tag = doc.find_all("div", {"class": "gs_rs"})
-    return paper_tag, cite_tag, link_tag, author_tag, text_tag
+    return paper_tag, author_tag, text_tag
 
 
 def get_text(text_tag):
@@ -155,13 +160,13 @@ def get_text(text_tag):
 
 
 # function for the getting link information
-def get_link(link_tag):
-    links = []
+# def get_link(link_tag):
+#     links = []
 
-    for i in range(len(link_tag)):
-        links.append(link_tag[i].a["href"])
+#     for i in range(len(link_tag)):
+#         links.append(link_tag[i].a["href"])
 
-    return links
+#     return links
 
 
 # it will return the number of citation of the paper
@@ -199,7 +204,7 @@ paper_repos_dict = {
     "Author": [],
     # 'Citation' : [],
     "Publication": [],
-    "Url of paper": [],
+    # "Url of paper": [],
     "Text": [],
 }
 
@@ -212,7 +217,7 @@ def add_in_paper_repo(
     # ,cite
     ,
     publi,
-    link,
+    # link,
     text,
 ):
     paper_repos_dict["Paper Title"].extend(papername)
@@ -220,7 +225,7 @@ def add_in_paper_repo(
     paper_repos_dict["Author"].extend(author)
     # # paper_repos_dict['Citation'].extend(cite)
     paper_repos_dict["Publication"].extend(publi)
-    paper_repos_dict["Url of paper"].extend(link)
+    # paper_repos_dict["Url of paper"].extend(link)
     paper_repos_dict["Text"].extend(text)
     return pd.DataFrame(paper_repos_dict)
 
@@ -230,38 +235,58 @@ def return_first_page(*, query: str):
     new_query = query.replace(" ", "+")
     url = f"https://scholar.google.com/scholar?start=0&q=EAGE+conference+and+exhibition+{new_query}&as_sdt=0,5"
 
-    paper_repos_dict = {
-        "Paper Title": [],
-        "Year": [],
-        "Author": [],
-        # 'Citation' : [],
-        "Publication": [],
-        "Url of paper": [],
-        "Text": [],
-    }
+    # paper_repos_dict = {
+    #     "Paper Title": [],
+    #     "Year": [],
+    #     "Author": [],
+    #     # 'Citation' : [],
+    #     "Publication": [],
+    #     # "Url of paper": [],
+    #     "Text": [],
+    # }
+
+    # def add_in_paper_repo(
+    #     papername,
+    #     year,
+    #     author
+    #     # ,cite
+    #     ,
+    #     publi,
+    #     # link,
+    #     text,
+    # ):
+    #     paper_repos_dict["Paper Title"].extend(papername)
+    #     paper_repos_dict["Year"].extend(year)
+    #     paper_repos_dict["Author"].extend(author)
+    #     # # paper_repos_dict['Citation'].extend(cite)
+    #     paper_repos_dict["Publication"].extend(publi)
+    #     # paper_repos_dict["Url of paper"].extend(link)
+    #     paper_repos_dict["Text"].extend(text)
+    #     return pd.DataFrame(paper_repos_dict)
 
     # function for the get content of each page
-    doc = get_paperinfo(url)
+    # doc = get_paperinfo(url)
 
     # function for the collecting tags
-    paper_tag, cite_tag, link_tag, author_tag, text_tag = get_tags(doc)
+    # paper_tag, author_tag, text_tag = get_tags(doc)
 
-    # paper title from each page
-    papername = get_papertitle(paper_tag)
+    # # paper title from each page
+    # papername = get_papertitle(paper_tag)
 
-    # year , author , publication of the paper
-    year, publication, author = get_author_year_publi_info(author_tag)
+    # # year , author , publication of the paper
+    # year, publication, author = get_author_year_publi_info(author_tag)
 
-    text = get_text(text_tag)
-    # cite count of the paper
-    # cite = get_citecount(cite_tag)
+    # text = get_text(text_tag)
+    # # cite count of the paper
+    # # cite = get_citecount(cite_tag)
 
-    # url of the paper
-    link = get_link(link_tag)
+    # # url of the paper
+    # # link = get_link(link_tag)
 
-    # add in paper repo dict
-    final = add_in_paper_repo(papername, year, author, publication, text, link)
+    # # add in paper repo dict
+    # final = add_in_paper_repo(papername, year, author, publication, text)
 
     # use sleep to avoid status code 429
-    result = [final["Paper Title"].iloc[0], final["Url of paper"].iloc[0]]
-    return result
+    # result = [final["Paper Title"].iloc[0], final["Url of paper"].iloc[0]]
+
+    return url

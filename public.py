@@ -1,22 +1,22 @@
 import streamlit as st
 import pandas as pd
 import basic_functions as bf
-
+from streamlit.components.v1 import html
 import query_scholar as qs
 
 
 st.set_page_config(layout="wide")
 
-page_bg_img = """
-<style>
-body {
-background-image: url("https://images.unsplash.com/photo-1542281286-9e0a16bb7366");
-background-size: cover;
-}
-</style>
-"""
 
-st.markdown(page_bg_img, unsafe_allow_html=True)
+def open_page(url):
+    open_script = """
+        <script type="text/javascript">
+            window.open('%s', '_blank').focus();
+        </script>
+    """ % (
+        url
+    )
+    html(open_script)
 
 
 if "recommendations" not in st.session_state:
@@ -82,7 +82,7 @@ with col1:
         )
 
 with col2:
-    st.header("Also check out...")
+    st.header("Make sure to check out...")
     # for i in indices:
     #     dictionary_out = bf.similarity_return_v3(id=i, n=n_recoms)
     #     st.write("this is what I am testing", f"{dictionary_out[0]['Title']}")
@@ -104,23 +104,27 @@ with col2:
         testdf = df.loc[df["File name"].isin(parsed)]
         st.dataframe(testdf["Title"], use_container_width=True, hide_index=True)
 
-    # st.write(parsed)
-    # st.dataframe(recommendations)
-    # st.write(recommendations["Title"].iloc[0])
-    # st.write(recommendations["Title"])
-    # st.write(bf.recommendations(n=n_recoms, title=recommendations["Title"].iloc[0]))
-    st.header("...as well as these classics!")
-    if st.session_state.search_indices == []:
-        st.write("First, please select some papers to recommend from")
-    else:
+        # st.write(parsed)
+        # st.dataframe(recommendations)
+        # st.write(recommendations["Title"].iloc[0])
+        # st.write(recommendations["Title"])
+        # st.write(bf.recommendations(n=n_recoms, title=recommendations["Title"].iloc[0]))
+        # st.header("...as well as these classics!")
+        # if st.session_state.search_indices == []:
+        #     st.write("First, please select some papers to recommend from")
+        # else:
         cont, _ = qs.parse_db_result(
-            results=qs.db_search(ids=st.session_state.current_indices, n=15)
+            results=qs.db_search(ids=st.session_state.search_indices, n=n)
         )
-        wf = qs.word_frequency(cont).most_common(6)
+        wf = qs.word_frequency(cont).most_common(10)
         query, readable = qs.create_query(cont)
         st.write(readable)
+        url = qs.return_first_page(query=query)
+        if st.button("...as well as these past EAGE classic papers!"):
+            open_page(url)
         # if st.button("Search"):
-        # new_data = qs.return_first_page(query=query)
+        #     url = qs.return_first_page(query=query)
+        #     st.write(f"check out this [link]({url})")
         # st.dataframe(new_data)
 # string = ""
 # for i in indices:.replace(" ", "+")
