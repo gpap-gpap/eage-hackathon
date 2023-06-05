@@ -4,7 +4,8 @@ import basic_functions as bf
 from streamlit.components.v1 import html
 import query_scholar as qs
 from PIL import Image
-@st.cache_data
+
+# @st.cache_data
 image = Image.open("eagle_transparent.png")
 
 st.set_page_config(layout="wide")
