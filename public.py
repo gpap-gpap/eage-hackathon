@@ -72,8 +72,8 @@ with col1:
         disabled=["widgets"],
         hide_index=True,
     )
-    if st.button("Reset recommendations"):
-        st.session_state.recommendations = df[new_df["Selected"] == False]
+    # if st.button("Reset recommendations"):
+    #     st.session_state.recommendations = df[new_df["Selected"] == False]
     if st.button("Generate recommendations"):
         st.session_state.recommendations = df[new_df["Selected"] == True]
         st.session_state.current_indices = (
