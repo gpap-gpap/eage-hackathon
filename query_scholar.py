@@ -24,7 +24,7 @@ from nltk.tokenize import sent_tokenize
 stop_words = set(stopwords.words("english"))
 years = {str(i) for i in range(1996, 2022)}
 
-api_key = st.secrets["PAID_OPEN_AI"]
+openai_api_key = st.secrets["PAID_OPEN_AI"]
 # openai.api_key = "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"
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
