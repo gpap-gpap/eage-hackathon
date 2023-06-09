@@ -8,7 +8,7 @@ import streamlit as st
 
 pd.options.display.max_colwidth = 20
 df = pd.read_excel(r"./data/Annual_2023_Hackathon_metadata.xlsx")
-api_key = os.environ["OPENAI_API_KEY"]
+api_key = st.secrets["PAID_OPEN_AI"]
 #
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local(
